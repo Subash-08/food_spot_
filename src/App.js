@@ -2,13 +2,15 @@ import './App.css';
 import Body from './components/Body';
 import Header from './components/Header';
 import {  BrowserRouter as Router, Routes, Route} from "react-router-dom";
-import Offer from './components/Offer';
+// import Offer from './components/Offer';
 import RestaurantMenu from './components/RestaurantMenu';
 import Error from './components/Error';
 import useNetworkStatus from './utils/useNetworkStatus'
 import Cart from './components/Cart';
 import OrderSuccess from './components/OrderSuccess';
 import AboutUs from './components/AboutUs';
+import { Suspense, lazy } from 'react';
+import Shimmer from './components/Shimmer';
 
 
 
@@ -16,6 +18,8 @@ import AboutUs from './components/AboutUs';
 function App() {
 
   const onlineStatus = useNetworkStatus();
+
+  const Offer = lazy(() => import("../src/components/Offer"))
 
 
 if(onlineStatus === false){
@@ -36,7 +40,10 @@ if(onlineStatus === false){
           
           <Routes  >
               <Route path='/' element={<Body />}  />
-              <Route path='/offer' element={<Offer />} />
+              
+              <Route path='/offer' element={<Suspense fallback={<Shimmer/>}><Offer /> </Suspense>} />
+              
+             
               <Route path='/aboutus' element={<AboutUs />} />
               <Route path='/restaurant/:resId' element={<RestaurantMenu />} />
               <Route path='/cart' element={<Cart />} />
